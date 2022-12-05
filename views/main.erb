@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Latest compiled and minified CSS 01 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+  <title>SManager</title>
+</head>
+<body>
+  <div class="page-header" align=center>
+    <b>
+      <h1> 
+      <div style="position: relative;height: 150px;"> 
+        <div style="float: left;width: 20%;position: relative;">
+          <img src="https://blog.v12n.io/content/images/2020/04/red-hat-ansible-tower-vector-logo.png" style="width: 70%;" />
+        </div>
+        <div style="float: left;position: relative;margin-top: 50px;margin-left: 350px;"> 
+          <p style="color:rgb(255,0,0);"> 
+            Ansible Automation Platform - Cliente <!-- Edite essa linha -->
+            <!-- <img src="https://www.grendene.com.br/addons/default/themes/grendene/img/logo-grendene.png" style="margin-top: -13.5px;"/> -->
+            <!-- test  -->
+          </p> 
+        </div>
+      </div>
+      <div style="position: relative;width: 90%;"> 
+        <img src="https://www.redhat.com/sysadmin/sites/default/files/styles/embed_large/public/2019-09/Anbile-Tower-strategy.png"/> 
+      </div>
+    </h1>
+    </b>
+  </div>
+
+  <% if ENV["DATABASE_SERVICE_HOST"].nil? && ENV["DATABASE_TEST_SERVICE_HOST"].nil? %>
+  <div class="container" align=center>
+    <h3>SMANAGER</h3>
+  </div>
+  <% else %>
+  <div class="container">
+    <h3> Get, edit or delete key-value pairs, for fun. </h3>
+    </br>
+    <form role="form" name="myForm" onSubmit="return handleSubmit()">
+      <div type="text" class="alert alert-warning" id="response" role="alert" style="display:none;"> </div>
+      <div class="form-group">
+        <label for="key"> Key </label>
+        <input type="text" class="form-control" id="key" name="key" value="" placeholder="Example: FirstName">
+      </div>
+
+      <div class="form-group">
+        <label for="value">Value</label>
+        <input type="text" id="value" class="form-control" name="value" value="" placeholder="Example: Dan"/>
+      </div>
+
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Action type <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="#" id="get">Get</a></li>
+          <li><a href="#" id="put">Put</a></li>
+          <li><a href="#" id="delete">Delete</a></li>
+        </ul>
+      </div>
+    </form>
+  </div>
+  <% end %>
+</body>
+
+<script type="text/javascript">
+function handleSubmit()
+      {
+        return false;
+      }
+
+document.getElementById('get').onclick = function() {
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET",window.location.protocol+"//"+window.location.hostname+":"+window.location.port+"/keys/"+document.getElementById("key").value, false );
+    xmlHttp.send( null );
+    document.getElementById("response").style.display = 'block';
+    document.getElementById("response").innerHTML = xmlHttp.responseText;
+}
+
+document.getElementById('put').onclick = function() {
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "POST", window.location.protocol+"//"+window.location.hostname+":"+window.location.port+"/keys/"+document.getElementById("key").value, false );
+    var params = "value="+document.getElementById("value").value;
+
+    xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlHttp.setRequestHeader("Content-length", params.length);
+    xmlHttp.setRequestHeader("Connection", "close");
+
+    xmlHttp.send( params );
+    document.getElementById("response").style.display = 'block';
+    document.getElementById("response").innerHTML = xmlHttp.responseText;
+}
+
+document.getElementById('delete').onclick = function() {
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "DELETE", window.location.protocol+"//"+window.location.hostname+":"+window.location.port+"/keys/"+document.getElementById("key").value, false );
+    xmlHttp.send( null );
+    document.getElementById("response").style.display = 'block';
+    document.getElementById("response").innerHTML = "Key deleted.";
+}
+#
+</script>
+</html>
